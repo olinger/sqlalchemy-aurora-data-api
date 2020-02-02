@@ -5,15 +5,16 @@ from setuptools import setup, find_packages
 setup(
     name="sqlalchemy-aurora-data-api",
     version="0.2.0",
-    url='https://github.com/chanzuckerberg/sqlalchemy-aurora-data-api',
+    url='https://github.com/olinger/sqlalchemy-aurora-data-api',
     license='Apache Software License',
     author='Andrey Kislyuk',
     author_email='akislyuk@chanzuckerberg.com',
     description='An AWS Aurora Serverless Data API dialect for SQLAlchemy',
     long_description=open('README.rst').read(),
+    #dependency_links=['https://github.com/olinger/aurora-data-api/archive/v0.2.1.tar.gz'],
     install_requires=[
         'sqlalchemy',
-        'aurora-data-api >= 0.2.0'
+        'aurora-data-api @ git+https://github.com/olinger/aurora-data-api@dev'
     ],
     extras_require={
     },
