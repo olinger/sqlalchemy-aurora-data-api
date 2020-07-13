@@ -9,6 +9,7 @@ import sqlalchemy.sql.sqltypes as sqltypes
 from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy.dialects.postgresql import JSON, JSONB, UUID, DATE, TIME, TIMESTAMP, ARRAY, ENUM
 from sqlalchemy.dialects.mysql.base import MySQLDialect
+from sqlalchemy import processors
 
 import aurora_data_api
 
@@ -84,6 +85,13 @@ class _ADA_ARRAY(ARRAY):
     def bind_expression(self, value):
         return func.string_to_array(value, "\v")
 
+class _ADA_NUMERIC(sqltypes.Numeric):
+    def result_processor(self, dialect, type_):
+        if not self.asdecimal:
+            return processors.to_float
+        else:
+            return sqltypes.Numeric.result_processor(self, dialect, type_)
+
 class AuroraMySQLDataAPIDialect(MySQLDialect):
     # See https://docs.sqlalchemy.org/en/13/core/internals.html#sqlalchemy.engine.interfaces.Dialect
     driver = "aurora_data_api"
@@ -92,6 +100,7 @@ class AuroraMySQLDataAPIDialect(MySQLDialect):
         sqltypes.Date: _ADA_DATE,
         sqltypes.Time: _ADA_TIME,
         sqltypes.DateTime: _ADA_TIMESTAMP,
+        sqltypes.Numeric: _ADA_NUMERIC
     })
 
     @classmethod
